@@ -199,9 +199,9 @@ export default function Profile() {
         </form>
       </div>
 
-      <p className="text-center text-xs text-gray-300 mt-4">
+      <p className="text-center text-xs text-black-300 mt-4">
         <a href="/about" className="hover:underline">
-          Tentang CoolRutin
+          == Tentang CoolRutin ==
         </a>
       </p>
 

@@ -57,10 +57,12 @@ export default function History() {
         });
 
         const entry = entries?.find((e) => e.entry_date === dateStr);
+        const score = entry?.mood ? moodScore(entry.mood) : null;
         days.push({
           date: label,
           score: entry?.mood ? moodScore(entry.mood) : null,
           emoji: entry?.mood || null,
+          emptyMarker: score === null ? 0.8 : null,
         });
       }
 
@@ -138,21 +140,28 @@ export default function History() {
         </h2>
         <div className="w-full h-72">
           <ResponsiveContainer>
-            <LineChart data={chartData}>
+            <LineChart
+              data={chartData}
+              margin={{ top: 20, right: 10, left: 0, bottom: 5 }}
+            >
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
               <XAxis dataKey="date" tick={{ fontSize: 12 }} />
               <YAxis
-                domain={[1, 5]}
+                domain={[0.5, 5.5]}
                 ticks={[1, 2, 3, 4, 5]}
                 tickFormatter={(value) =>
                   MOODS.find((m) => m.score === value)?.emoji || value
                 }
               />
               <Tooltip
-                formatter={(value, name, props) => [
-                  props.payload.emoji || "Belum diisi",
-                  "Mood",
-                ]}
+                formatter={(value, name) => {
+                  if (name === "emptyMarker") return ["Tidak diisi", "Status"];
+                  return [value, name];
+                }}
+                labelFormatter={(label, payload) => {
+                  const emoji = payload?.[0]?.payload?.emoji;
+                  return emoji ? `${label} — Mood: ${emoji}` : label;
+                }}
               />
               <Line
                 type="monotone"
@@ -162,6 +171,14 @@ export default function History() {
                 dot={{ r: 6, fill: "#fb923c" }}
                 activeDot={{ r: 8 }}
                 connectNulls={false}
+              />
+              <Line
+                type="monotone"
+                dataKey="emptyMarker"
+                stroke="none"
+                dot={{ r: 4, fill: "#d1d5db" }}
+                connectNulls={false}
+                legendType="none"
               />
             </LineChart>
           </ResponsiveContainer>

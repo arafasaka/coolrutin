@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { MOODS } from "@/lib/moods";
 import Navbar from "@/components/navbar";
+import { useUnsavedChanges } from "@/context/unsaved-changes";
 
 const EXERCISE_TYPES = [
   { emoji: "🏃", label: "Treadmill", color: "#ffdab9" },
@@ -37,6 +38,7 @@ export default function Dashboard() {
   const [showCustomDuration, setShowCustomDuration] = useState(false);
 
   const router = useRouter();
+  const { setIsDirty, registerSaveHandler } = useUnsavedChanges();
 
   const today = new Date().toISOString().split("T")[0];
 
@@ -121,6 +123,10 @@ export default function Dashboard() {
     init();
   }, [router]);
 
+  useEffect(() => {
+    registerSaveHandler(handleSaveMood);
+  }, [selectedMood, note]);
+
   const handleSaveMood = async () => {
     if (!selectedMood) return;
     setSaving(true);
@@ -137,6 +143,7 @@ export default function Dashboard() {
 
     setSaving(false);
     if (!error) setSaved(true);
+    setIsDirty(false);
   };
 
   const handleToggleMissionCompleted = async () => {
@@ -235,6 +242,7 @@ export default function Dashboard() {
               onClick={() => {
                 setSelectedMood(m.emoji);
                 setSaved(false);
+                setIsDirty(true);
               }}
               className={`p-2 rounded-2xl transition-all ${
                 selectedMood === m.emoji
@@ -258,6 +266,7 @@ export default function Dashboard() {
           onChange={(e) => {
             setNote(e.target.value);
             setSaved(false);
+            setIsDirty(true);
           }}
           placeholder="Contoh: Makan siang enak sama teman lama..."
           rows={3}

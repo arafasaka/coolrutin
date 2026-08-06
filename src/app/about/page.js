@@ -8,9 +8,9 @@ export default function About() {
 
         <p className="text-gray-600 mb-6 leading-relaxed">
           Aplikasi web sederhana untuk mencatat mood harian, misi kecil, dan
-          aktivitas olahraga — biar hidup terasa lebih teratur dan menyenangkan!
-          Semoga suka sama web nya ya! akan ada beberapa update kedepan kalau lg mood hehe.
-          Dibuat dengan hati dan dibantu claude.
+          aktivitas olahraga biar hidupmu terasa lebih teratur dan menyenangkan!
+          Semoga suka sama web nya ya! akan ada beberapa update kedepan kalau lagi mood hehe.
+          Dibuat dengan hati dan dibantu oleh claude.
         </p>
 
         <p>
