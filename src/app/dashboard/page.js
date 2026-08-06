@@ -123,15 +123,10 @@ export default function Dashboard() {
     init();
   }, [router]);
 
-
   const handleSaveMood = async () => {
     if (!selectedMood) return;
     setSaving(true);
 
-      useEffect(() => {
-    registerSaveHandler(handleSaveMood);
-  }, [selectedMood, note]);
-  
     const { error } = await supabase.from("entries").upsert(
       {
         user_id: user.id,
@@ -146,6 +141,10 @@ export default function Dashboard() {
     if (!error) setSaved(true);
     setIsDirty(false);
   };
+  
+    useEffect(() => {
+      registerSaveHandler(handleSaveMood);
+    }, [selectedMood, note]);
 
   const handleToggleMissionCompleted = async () => {
     const newValue = !missionCompleted;
