@@ -123,14 +123,15 @@ export default function Dashboard() {
     init();
   }, [router]);
 
-  useEffect(() => {
-    registerSaveHandler(handleSaveMood);
-  }, [selectedMood, note]);
 
   const handleSaveMood = async () => {
     if (!selectedMood) return;
     setSaving(true);
 
+      useEffect(() => {
+    registerSaveHandler(handleSaveMood);
+  }, [selectedMood, note]);
+  
     const { error } = await supabase.from("entries").upsert(
       {
         user_id: user.id,
