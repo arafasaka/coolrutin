@@ -122,6 +122,11 @@ export default function Login() {
             Sign Up
           </a>
         </p>
+        <p className="text-center text-xs text-gray-300 mt-4">
+          <a href="/about" className="hover:underline">
+            Tentang CoolRutin
+          </a>
+        </p>
       </div>
     </div>
   );
