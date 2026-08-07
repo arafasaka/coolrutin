@@ -31,6 +31,7 @@ export default function Navbar() {
   const links = [
     { href: "/dashboard", label: "🏠", text: "Home" },
     { href: "/history", label: "📊", text: "Riwayat" },
+     { href: '/games', label: '🎮', text: 'Game' },
     { href: "/profile", label: "👤", text: "Profil" },
     ...(isAdmin
       ? [{ href: "/admin/missions", label: "⚙️", text: "Admin" }]

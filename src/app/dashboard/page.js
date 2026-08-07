@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { MOODS } from "@/lib/moods";
 import Navbar from "@/components/navbar";
 import { useUnsavedChanges } from "@/context/unsaved-changes";
+import { getLocalDateString } from "@/lib/date";
 
 const EXERCISE_TYPES = [
   { emoji: "🏃", label: "Treadmill", color: "#ffdab9" },
@@ -40,7 +41,7 @@ export default function Dashboard() {
   const router = useRouter();
   const { setIsDirty, registerSaveHandler } = useUnsavedChanges();
 
-  const today = new Date().toISOString().split("T")[0];
+  const today = getLocalDateString();
 
   useEffect(() => {
     const init = async () => {
@@ -92,9 +93,9 @@ export default function Dashboard() {
         missionsData &&
         missionsData.length > 0
       ) {
-        const dayOfYear = Math.floor(
-          (new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000,
-        );
+        const now = new Date();
+        const startOfYear = new Date(now.getFullYear(), 0, 1);
+        const dayOfYear = Math.floor((now - startOfYear) / 86400000);
         const picked = missionsData[dayOfYear % missionsData.length];
         setCurrentMission(picked);
 
@@ -141,10 +142,10 @@ export default function Dashboard() {
     if (!error) setSaved(true);
     setIsDirty(false);
   };
-  
-    useEffect(() => {
-      registerSaveHandler(handleSaveMood);
-    }, [selectedMood, note]);
+
+  useEffect(() => {
+    registerSaveHandler(handleSaveMood);
+  }, [selectedMood, note]);
 
   const handleToggleMissionCompleted = async () => {
     const newValue = !missionCompleted;

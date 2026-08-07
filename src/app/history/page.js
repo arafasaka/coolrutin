@@ -15,6 +15,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import Navbar from "@/components/navbar";
+import { getLocalDateString } from '@/lib/date'
 
 export default function History() {
   const [loading, setLoading] = useState(true);
@@ -36,7 +37,7 @@ export default function History() {
       // Ambil 7 hari terakhir
       const sevenDaysAgo = new Date();
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
-      const startDate = sevenDaysAgo.toISOString().split("T")[0];
+      const startDate = getLocalDateString(sevenDaysAgo);
 
       const { data: entries } = await supabase
         .from("entries")
@@ -50,7 +51,7 @@ export default function History() {
       for (let i = 6; i >= 0; i--) {
         const d = new Date();
         d.setDate(d.getDate() - i);
-        const dateStr = d.toISOString().split("T")[0];
+        const dateStr = getLocalDateString(d);
         const label = d.toLocaleDateString("id-ID", {
           weekday: "short",
           day: "numeric",
@@ -79,7 +80,7 @@ export default function History() {
       for (let i = 6; i >= 0; i--) {
         const d = new Date();
         d.setDate(d.getDate() - i);
-        const dateStr = d.toISOString().split("T")[0];
+        const dateStr = getLocalDateString(d);
         const label = d.toLocaleDateString("id-ID", {
           weekday: "long",
           day: "numeric",
@@ -107,7 +108,7 @@ export default function History() {
       for (let i = 6; i >= 0; i--) {
         const d = new Date();
         d.setDate(d.getDate() - i);
-        const dateStr = d.toISOString().split("T")[0];
+        const dateStr = getLocalDateString(d);
         const label = d.toLocaleDateString("id-ID", {
           weekday: "short",
           day: "numeric",
