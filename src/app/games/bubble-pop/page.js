@@ -10,6 +10,7 @@ const BOMB_CHANCE = 0.16;
 export default function BubblePop() {
   const canvasRef = useRef(null);
   const bubblesRef = useRef([]);
+  const particlesRef = useRef([]);
   const animRef = useRef(null);
   const startTimeRef = useRef(null);
   const spawnTimerRef = useRef(0);
@@ -51,6 +52,7 @@ export default function BubblePop() {
 
   const startGame = () => {
     bubblesRef.current = [];
+    particlesRef.current = []  // <-- tambahkan ini
     spawnTimerRef.current = 0;
     startTimeRef.current = performance.now();
     setScore(0);
@@ -116,7 +118,7 @@ export default function BubblePop() {
       }
 
       // Difficulty: makin lama makin cepat geraknya
-      const difficulty = 1 + elapsed / 30; // naik pelan-pelan
+      const difficulty = 1 + elapsed / 20; // naik pelan-pelan
 
       // Spawn bubble baru (jumlah spawn tetap konsisten)
       spawnTimerRef.current -= 1;
@@ -149,6 +151,20 @@ export default function BubblePop() {
         return true;
       });
 
+      // Gambar & update partikel pecah
+      particlesRef.current = particlesRef.current.filter((p) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 1;
+        if (p.life <= 0) return false;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(251,146,60,${p.life / p.maxLife})`;
+        ctx.fill();
+        return true;
+      });
+
       animRef.current = requestAnimationFrame(loop);
     };
 
@@ -177,6 +193,42 @@ export default function BubblePop() {
     }
     bubblesRef.current.splice(hitIndex, 1);
     setScore((s) => s + 1);
+    spawnParticles(hit.x, hit.y);
+    playPopSound();
+  };
+
+  const spawnParticles = (x, y) => {
+    for (let i = 0; i < 10; i++) {
+      const angle = (Math.PI * 2 * i) / 10;
+      particlesRef.current.push({
+        x,
+        y,
+        vx: Math.cos(angle) * (2 + Math.random() * 2),
+        vy: Math.sin(angle) * (2 + Math.random() * 2),
+        size: 3 + Math.random() * 2,
+        life: 20,
+        maxLife: 20,
+      });
+    }
+  };
+
+  const playPopSound = () => {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(600, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.1);
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.1);
+    } catch (e) {
+      // Browser lama yang nggak support Web Audio API, abaikan aja
+    }
   };
 
   return (
