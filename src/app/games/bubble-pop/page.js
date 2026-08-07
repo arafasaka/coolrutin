@@ -10,6 +10,7 @@ const BOMB_CHANCE = 0.16;
 export default function BubblePop() {
   const canvasRef = useRef(null);
   const bubblesRef = useRef([]);
+  const audioCtxRef = useRef(null);
   const particlesRef = useRef([]);
   const animRef = useRef(null);
   const startTimeRef = useRef(null);
@@ -52,7 +53,7 @@ export default function BubblePop() {
 
   const startGame = () => {
     bubblesRef.current = [];
-    particlesRef.current = []  // <-- tambahkan ini
+    particlesRef.current = []; // <-- tambahkan ini
     spawnTimerRef.current = 0;
     startTimeRef.current = performance.now();
     setScore(0);
@@ -125,9 +126,9 @@ export default function BubblePop() {
       if (spawnTimerRef.current <= 0) {
         spawnTimerRef.current = 40;
         bubblesRef.current.push({
-          x: 30 + Math.random() * (canvas.width - 60),
+          x: 34 + Math.random() * (canvas.width - 68),
           y: canvas.height + 20,
-          r: 24,
+          r: 30,
           isBomb: Math.random() < BOMB_CHANCE,
           speed: (1.2 + Math.random() * 0.8) * difficulty,
         });
@@ -182,7 +183,7 @@ export default function BubblePop() {
     const y = (e.clientY - rect.top) * scaleY;
 
     const hitIndex = bubblesRef.current.findIndex(
-      (b) => Math.hypot(b.x - x, b.y - y) < b.r,
+      (b) => Math.hypot(b.x - x, b.y - y) < b.r + 6,
     );
     if (hitIndex === -1) return;
 
@@ -214,7 +215,14 @@ export default function BubblePop() {
 
   const playPopSound = () => {
     try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      if (!audioCtxRef.current) {
+        audioCtxRef.current = new (
+          window.AudioContext || window.webkitAudioContext
+        )();
+      }
+      const ctx = audioCtxRef.current;
+      if (ctx.state === "suspended") ctx.resume();
+
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.connect(gain);
