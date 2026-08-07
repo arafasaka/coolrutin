@@ -22,7 +22,7 @@ export default function About() {
           <h2 className="font-bold text-gray-700 mb-3">🎯 Fitur</h2>
           <ul className="text-sm text-gray-600 space-y-1.5">
             <li>😊 Catat mood harian dengan emoji</li>
-            <li>📝 Jurnal singkat "1 hal berkesan hari ini"</li>
+            <li>📝 Jurnal singkat &quot;1 hal berkesan hari ini&quot;</li>
             <li>🎯 Misi harian dengan tombol acak</li>
             <li>🏃 Log olahraga (jenis + durasi)</li>
             <li>📊 Grafik progress mingguan</li>
@@ -40,7 +40,7 @@ export default function About() {
               </div>
               <p className="text-gray-500 text-xs mb-1">Agustus 2026</p>
               <ul className="text-gray-600 text-xs space-y-0.5">
-                <li>• Mini game "Bubble Pop" dengan high score</li>
+                <li>• Mini game &quot;Bubble Pop&quot; dengan high score</li>
                 <li>• Login dengan Google</li>
                 <li>• Lupa & reset password</li>
                 <li>• Foto profil</li>
